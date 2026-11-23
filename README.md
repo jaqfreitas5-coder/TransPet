@@ -88,7 +88,6 @@ Resumo completo em [`backend/README.md`](backend/README.md).
 
 **Observação:** a etapa "Escolha de frontend, backend e banco de dados" foi realizada somente por Jaqueline Freitas. Os outros dois integrantes inscritos nela não participaram.
 
-## Vídeo de demonstração
 
 ## Vídeo de demonstração
 
