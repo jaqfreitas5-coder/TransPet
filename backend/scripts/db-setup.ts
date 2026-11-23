@@ -1,5 +1,4 @@
-// Cria as tabelas e insere os dados iniciais.
-// Rode com: npm run db:setup   (ATENÇÃO: apaga os dados existentes)
+
 import "dotenv/config";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
