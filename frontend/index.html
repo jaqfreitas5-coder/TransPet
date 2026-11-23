@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TransPet | Transporte Pet</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="palco">
+
+    <!-- "Celular" com o aplicativo -->
+    <div class="celular">
+      <header class="topo">
+        <div>
+          <h1 class="marca">TransPet</h1>
+          <p class="slogan">Mais que transporte, cuidado em movimento.</p>
+        </div>
+        <button id="btnSair" class="btn-sair" type="button" hidden>Sair</button>
+      </header>
+
+      <main id="tela" class="tela" aria-live="polite"></main>
+
+      <nav id="menu" class="menu" hidden>
+        <button type="button" data-ir="home"><span>🏠</span>Início</button>
+        <button type="button" data-ir="pets"><span>🐾</span>Meus pets</button>
+        <button type="button" data-ir="historico"><span>🧾</span>Histórico</button>
+      </nav>
+    </div>
+
+    <!-- Painel que mostra as chamadas reais à API (útil para a apresentação) -->
+    <aside class="painel-api">
+      <h2>📡 Chamadas à API (ao vivo)</h2>
+      <div id="log" class="log"></div>
+    </aside>
+
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

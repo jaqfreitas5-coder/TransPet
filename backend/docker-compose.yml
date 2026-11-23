@@ -1,0 +1,16 @@
+# Sobe um PostgreSQL local com: docker compose up -d
+services:
+  db:
+    image: postgres:16
+    container_name: transpet-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: transpet
+    ports:
+      - "5432:5432"
+    volumes:
+      - transpet-data:/var/lib/postgresql/data
+
+volumes:
+  transpet-data:

@@ -1,0 +1,195 @@
+/* TransPet — estilo do protótipo (mobile-first, dentro de uma moldura de celular) */
+:root {
+  --laranja: #e34b24;
+  --laranja-escuro: #c63c18;
+  --preto: #111111;
+  --mapa: #0f1929;
+  --verde: #22a95a;
+  --cinza-texto: #5d5d63;
+  --fundo: #eeeef0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+
+body {
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--fundo);
+  color: var(--preto);
+  min-height: 100vh;
+}
+
+.palco {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 16px;
+}
+
+/* ---------- Moldura do celular ---------- */
+.celular {
+  width: 390px;
+  height: min(780px, calc(100vh - 32px));
+  background: #fff;
+  border: 10px solid var(--preto);
+  border-radius: 38px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.topo {
+  background: var(--laranja);
+  color: #fff;
+  padding: 16px 20px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.marca { font-size: 22px; font-style: italic; font-weight: 800; letter-spacing: .2px; }
+.slogan { font-size: 11px; font-weight: 700; margin-top: 2px; }
+.btn-sair {
+  background: rgba(255, 255, 255, .25);
+  color: #fff;
+  border: 0;
+  border-radius: 12px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.tela { flex: 1; overflow-y: auto; padding: 20px; }
+.tela h2 { font-size: 22px; margin-bottom: 14px; }
+.tela h2 em { font-style: normal; color: var(--laranja); }
+.sub { color: var(--cinza-texto); font-size: 13px; margin: -8px 0 14px; }
+.secao { font-size: 12px; font-weight: 700; letter-spacing: .6px; color: var(--cinza-texto); margin: 16px 0 8px; text-transform: uppercase; }
+
+/* ---------- Formulários ---------- */
+label { display: block; font-size: 13px; color: var(--cinza-texto); margin: 12px 0 4px; }
+input, select, textarea {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--laranja);
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: inherit;
+  background: #fff;
+  color: var(--preto);
+}
+textarea { height: 80px; padding: 10px 12px; resize: none; }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--preto); outline-offset: 0; }
+.linha { display: flex; gap: 10px; }
+.linha > div:first-child { flex: 1.3; }
+.linha > div:last-child { flex: 1; }
+
+/* ---------- Botões ---------- */
+.btn {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--laranja);
+  background: #fff;
+  color: var(--laranja);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+.btn:hover { background: #fff3ef; }
+.btn.cheio { background: var(--laranja); color: #fff; }
+.btn.cheio:hover { background: var(--laranja-escuro); }
+.btn.escuro { background: #1d1c1f; border-color: #1d1c1f; color: #fff; }
+.btn.escuro:hover { background: #000; }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.link { display: block; text-align: center; margin-top: 14px; color: var(--laranja); font-weight: 700; font-size: 14px; background: none; border: 0; width: 100%; cursor: pointer; font-family: inherit; }
+
+.erro { background: #fdecea; color: #a32612; border-radius: 10px; padding: 10px 12px; font-size: 13px; margin-top: 12px; }
+.ok { background: #e7f6ee; color: #14683a; border-radius: 10px; padding: 10px 12px; font-size: 13px; margin-top: 12px; }
+
+/* ---------- Chips (extras) ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  border: 1px solid var(--laranja);
+  background: #fff;
+  color: var(--laranja);
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.chip.ativo { background: var(--laranja); color: #fff; }
+
+/* ---------- Cartões e listas ---------- */
+.cartao { border: 1px solid #e4e4e8; border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; background: #fff; }
+.cartao.sel { border: 2px solid var(--laranja); background: #fff6f3; }
+.cartao.off { opacity: .55; }
+.cartao h3 { font-size: 16px; }
+.cartao p { font-size: 13px; color: var(--cinza-texto); margin-top: 2px; }
+.cartao .topo-cartao { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.preco { font-weight: 800; font-size: 16px; white-space: nowrap; }
+.selo { display: inline-block; background: var(--laranja); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 6px; vertical-align: middle; }
+.selo.cinza { background: #8a8a90; }
+.vazio { text-align: center; color: var(--cinza-texto); padding: 22px 8px; font-size: 14px; }
+.pet-linha { display: flex; align-items: center; gap: 10px; }
+.pet-linha .emoji { font-size: 26px; }
+.mini { background: none; border: 0; color: var(--laranja); font-weight: 700; cursor: pointer; font-size: 13px; font-family: inherit; }
+.resumo { background: #f7f7f9; border-radius: 14px; padding: 12px 14px; font-size: 14px; line-height: 1.7; margin-bottom: 6px; }
+.resumo b { color: var(--preto); }
+
+/* ---------- Mapa ilustrativo ---------- */
+.mapa { background: var(--mapa); border-radius: 16px; height: 150px; margin-bottom: 14px; position: relative; overflow: hidden; }
+.mapa svg { width: 100%; height: 100%; display: block; }
+.mapa .carro { position: absolute; font-size: 20px; transform: translate(-50%, -50%); transition: left 1.2s ease, top 1.2s ease; }
+
+/* ---------- Cartão de status (laranja) ---------- */
+.status { background: var(--laranja); color: #fff; border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+.status h3 { font-size: 21px; margin-bottom: 4px; }
+.status .peq { font-size: 13px; opacity: .95; margin-bottom: 10px; }
+.status .info { font-size: 15px; margin-top: 6px; }
+.motorista { background: #fff; color: var(--preto); border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 12px; margin: 10px 0; }
+.motorista .foto { width: 44px; height: 44px; border-radius: 50%; background: #fbe3dc; display: grid; place-items: center; font-size: 24px; }
+.motorista b { display: block; font-size: 16px; }
+.motorista small { color: var(--cinza-texto); font-size: 13px; }
+
+/* ---------- Etapas ---------- */
+.etapas { list-style: none; margin-bottom: 6px; }
+.etapas li { display: flex; align-items: center; gap: 10px; padding: 7px 4px; color: #8a8a90; font-size: 15px; }
+.etapas li::before { content: ""; width: 18px; height: 18px; border-radius: 50%; border: 2px solid #cfcfd4; flex-shrink: 0; }
+.etapas li.feita::before { background: var(--verde); border-color: var(--verde); }
+.etapas li.feita { color: #8a8a90; }
+.etapas li.atual { color: var(--preto); font-weight: 700; }
+
+/* ---------- Avaliação ---------- */
+.estrelas { display: flex; justify-content: center; gap: 6px; margin: 8px 0 4px; }
+.estrelas button { background: none; border: 0; font-size: 38px; line-height: 1; cursor: pointer; color: #d4d4d8; }
+.estrelas button.on { color: #f5a623; }
+.centro { text-align: center; }
+.grande { font-size: 44px; margin: 6px 0; }
+
+/* ---------- Menu inferior ---------- */
+.menu { display: flex; border-top: 1px solid #e4e4e8; background: #fff; }
+.menu button { flex: 1; background: none; border: 0; padding: 8px 0 10px; font-size: 11px; color: var(--cinza-texto); cursor: pointer; font-family: inherit; }
+.menu button span { display: block; font-size: 18px; }
+.menu button.ativo { color: var(--laranja); font-weight: 700; }
+
+/* ---------- Painel de chamadas à API ---------- */
+.painel-api { width: 300px; height: min(780px, calc(100vh - 32px)); background: var(--preto); color: #e8e8e8; border-radius: 18px; padding: 14px; display: flex; flex-direction: column; flex-shrink: 0; }
+.painel-api h2 { font-size: 13px; margin-bottom: 10px; }
+.log { flex: 1; overflow-y: auto; font-family: Consolas, "Courier New", monospace; font-size: 11px; line-height: 1.45; word-break: break-all; }
+.log .req { color: #6fb7ff; margin-top: 8px; }
+.log .res-ok { color: #8cf0a7; }
+.log .res-erro { color: #ff8d7a; }
+.log .corpo { color: #d6f5c9; }
+
+/* ---------- Telas pequenas: o app ocupa a tela toda ---------- */
+@media (max-width: 760px) {
+  .painel-api { display: none; }
+  .palco { padding: 0; }
+  .celular { width: 100%; height: 100vh; border: 0; border-radius: 0; }
+}
