@@ -3,7 +3,7 @@
 **Mais que transporte, cuidado em movimento.**
 
 Protótipo funcional (PoC) de um aplicativo de transporte especializado para pets.
-Projeto Integrador — SENAC EAD (TADS/TSI) — **Grupo 41** — 2ª entrega.
+Projeto Integrador SENAC EAD (TADS/TSI) — **Grupo 41** — 2ª entrega.
 
 ## Jornada da prova de conceito
 
@@ -28,7 +28,7 @@ valores das corridas, disponibilidade de veículos. O botão **"Avançar etapa (
 TransPet/
 ├── backend/    # API REST + banco de dados (README próprio com todas as rotas)
 ├── frontend/   # Interface do app (servida pela API em /demo)
-└── docs/       # Mapeamento das jornadas, layout das telas, manual de configuração e vídeo
+└── docs/       # Mapeamento das jornadas e manual de configuração
 ```
 
 ## Como executar (passo a passo)
