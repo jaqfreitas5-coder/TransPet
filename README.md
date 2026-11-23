@@ -3,7 +3,7 @@
 **Mais que transporte, cuidado em movimento.**
 
 Protótipo funcional (PoC) de um aplicativo de transporte especializado para pets.
-Projeto Integrador — SENAC EAD (TADS/TSI) — **Grupo 41** — 2ª entrega.
+Projeto Integrador SENAC EAD (TADS/TSI) — **Grupo 41** — 2ª entrega.
 
 ## Jornada da prova de conceito
 
@@ -70,6 +70,8 @@ Com a API rodando, em outro terminal, dentro de `backend/`:
 npm run test:tudo
 ```
 
+Resultado esperado: **62 testes passando** (cadastro/login, pets, estimativa, corridas, avaliação e histórico).
+
 ## Rotas da API
 
 Resumo completo em [`backend/README.md`](backend/README.md).
@@ -78,14 +80,20 @@ Resumo completo em [`backend/README.md`](backend/README.md).
 
 | Nome | Etapa escolhida na enquete do grupo |
 |---|---|
-| Jaqueline Freitas | Escolha de frontend, backend e banco de dados; lógica do servidor, APIs e repositório de dados |
-| Giovanna | Configuração de repositório e servidores de desenvolvimento |
-| Ray | Configuração de repositório e servidores de desenvolvimento |
-| Novaes | Jornadas associadas (mapeamento) |
-| Vitória Mota | Criar interface |
+| Jaqueline Freitas Dos Santos | Escolha de frontend, backend e banco de dados; lógica do servidor, APIs e repositório de dados |
+| Giovanna Bueno Barros | Configuração de repositório e servidores de desenvolvimento |
+| Rayanne Targino Muniz | Configuração de repositório e servidores de desenvolvimento |
+| Wesley Salgueiro Novaes | Jornadas associadas (mapeamento) |
+| Vitoria Cristine Mota | Criar interface |
 
 **Observação:** a etapa "Escolha de frontend, backend e banco de dados" foi realizada somente por Jaqueline Freitas. Os outros dois integrantes inscritos nela não participaram.
 
 ## Vídeo de demonstração
 
-_Colar aqui o link (YouTube não listado) do vídeo de até 1 minuto._
+## Vídeo de demonstração
+
+▶️ **[Assistir no YouTube (59 s)](https://youtu.be/4-hsuZEDVgE)**
+
+O vídeo mostra a jornada completa funcionando: cadastro de pet → solicitação com agendamento e extras →
+categoria recomendada e bloqueadas → resumo e confirmação → motorista confirmado → viagem em andamento →
+viagem concluída e avaliação. À direita, o painel exibe as chamadas reais à API.
