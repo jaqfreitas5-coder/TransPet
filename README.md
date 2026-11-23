@@ -90,8 +90,9 @@ Resumo completo em [`backend/README.md`](backend/README.md).
 
 ## Vídeo de demonstração
 
-▶️ **[Assistir ao vídeo (59 s)](docs/video_demonstracao.mp4)** — arquivo `docs/video_demonstracao.mp4`
-(no GitHub, clique no arquivo e depois em **View raw** para reproduzir ou baixar).
+## Vídeo de demonstração
+
+▶️ **[Assistir no YouTube (59 s)](https://youtu.be/4-hsuZEDVgE)**
 
 O vídeo mostra a jornada completa funcionando: cadastro de pet → solicitação com agendamento e extras →
 categoria recomendada e bloqueadas → resumo e confirmação → motorista confirmado → viagem em andamento →
