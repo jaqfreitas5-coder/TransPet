@@ -1,315 +1,150 @@
-# TransPet API — Backend
+# TransPet 🐾
 
-API do aplicativo TransPet (Projeto Integrador — Grupo 41).
+**Mais que transporte, cuidado em movimento.**
 
-**Stack:** Node.js + Express + TypeScript + PostgreSQL (driver `pg`, SQL puro)
+Protótipo funcional (PoC) de um aplicativo de transporte especializado para pets.
+Projeto Integrador — SENAC EAD (TADS/TSI) — **Grupo 41** — 2ª entrega.
 
-## Estrutura de pastas
+## 🎬 Vídeo de demonstração (59 s)
 
-```
-transpet-api/
-├── db/
-│   ├── schema.sql        # criação das tabelas (repositório de dados)
-│   └── seed.sql          # dados fictícios: categorias, extras, motoristas
-├── scripts/
-│   └── db-setup.ts       # roda schema.sql + seed.sql no banco
-├── src/
-│   ├── server.ts         # sobe o servidor
-│   ├── app.ts            # configura o Express e registra as rotas
-│   ├── db.ts             # conexão com o PostgreSQL
-│   ├── errors.ts         # tratamento de erros padronizado
-│   ├── middlewares/
-│   │   └── auth.ts       # confere o token JWT nas rotas protegidas
-│   ├── repositories/     # SQL de cada tabela (repositório de dados)
-│   ├── services/         # regras de negócio
-│   └── routes/           # rotas HTTP + validação dos dados
-├── tests/                # testes automáticos de cada parte
-├── docker-compose.yml    # PostgreSQL local via Docker
-├── .env.example          # modelo das variáveis de ambiente
-└── package.json
-```
+▶️ **[Assistir ao vídeo](docs/video_demonstracao.mp4)** — arquivo MP4 em `docs/video_demonstracao.mp4`
+(no GitHub, clique no arquivo e depois em **View raw** para reproduzir ou baixar).
 
-## 📋 Resumo de todas as rotas (para quem faz a interface)
+O vídeo mostra a jornada completa da PoC funcionando: cadastro de pet → solicitação com agendamento e extras →
+categoria recomendada e bloqueadas → resumo e confirmação → motorista confirmado → viagem em andamento →
+viagem concluída e avaliação. À direita, o painel exibe as chamadas reais à API.
 
-🔒 = precisa do cabeçalho `Authorization: Bearer TOKEN`
+---
 
-| Tela do app | Método e rota |
+## 1. Revisão do projeto e definição da prova de conceito
+
+### O que revisamos da 1ª entrega
+Na 1ª entrega mapeamos o TransPet completo: personas, jornadas associadas (JA01 a JA09) e o layout das telas
+(arquivos em [`docs/`](docs/)). Ao revisitar o projeto, identificamos que o **maior risco** não é visual, e sim
+a **jornada principal funcionar de ponta a ponta com regras de negócio reais**:
+
+- o tutor consegue cadastrar o pet com as informações que importam para o transporte (espécie, porte, observações)?
+- o sistema oferece **só as categorias de veículo compatíveis** com aquele pet e calcula o valor corretamente?
+- o tutor consegue **acompanhar o status** da corrida até a conclusão e avaliar o motorista?
+
+### PoC escolhida: a jornada principal "Solicitar e acompanhar uma corrida"
+Cadastro/Login → Pet → Solicitação (origem, destino, agendamento, extras) → Categoria → Resumo e confirmação
+→ Motorista confirmado → Acompanhamento da viagem → Conclusão → Avaliação (estrelas + comentário) → Histórico.
+
+| Jornada | Implementado na PoC |
 |---|---|
-| Cadastro | `POST /auth/cadastro` |
-| Login | `POST /auth/login` |
-| Tela inicial | 🔒 `GET /auth/me` |
-| Meus pets | 🔒 `GET /pets`, `DELETE /pets/:id` |
-| Cadastro / edição de pet | 🔒 `POST /pets`, `PUT /pets/:id` |
-| Solicitar corrida (categorias, extras, valor) | `GET /categorias`, `GET /extras`, 🔒 `POST /corridas/estimativa` |
-| Botão "Confirmar" | 🔒 `POST /corridas` |
-| Procurando motorista / Motorista confirmado / Corrida em andamento | 🔒 `GET /corridas/:id` (consultar a cada 3s) |
-| Cancelar | 🔒 `POST /corridas/:id/cancelar` |
-| Viagem concluída / Avalie a motorista | 🔒 `POST /corridas/:id/avaliacao` |
-| Histórico | 🔒 `GET /corridas` |
-| (apresentação) pular etapa | 🔒 `POST /corridas/:id/avancar` |
+| JA01 Cadastro e login | ✅ Cadastro do tutor junto com o primeiro pet (como no layout), login com JWT |
+| JA02 Pets | ✅ Listar, cadastrar e remover pets (cada tutor só vê os seus) |
+| JA03 Solicitação | ✅ Partida, destino, agendamento opcional e extras (música ambiente, mantas, petiscos) |
+| JA04 Categorias | ✅ Categoria recomendada para o pet; incompatíveis bloqueadas (ex.: Pet Felino só para gatos) |
+| JA05 Confirmação e motorista | ✅ Resumo, confirmação e motorista com veículo e placa |
+| JA06 Acompanhamento | ✅ Status em 5 etapas e "chegada em X minutos" |
+| JA07 Avaliação | ✅ 1 a 5 estrelas + comentário, somente após a conclusão |
+| JA08 Histórico | ✅ Corridas do tutor com status e avaliação |
 
-Para rodar todos os testes de uma vez: `npm run test:tudo` (~30s).
+### O que é simulado (permitido no mapeamento)
+Busca de motorista, localização/rastreamento (mapa ilustrativo), distância e valores das corridas,
+disponibilidade de veículos. A Ambulância Pet aparece como **ilustrativa** ("em breve").
+O botão **"⏩ Avançar etapa (demonstração)"** acelera o status durante a apresentação.
 
-## Parte 1 — Rodando pela primeira vez
+### Ajustes feitos em relação à 1ª entrega
+- **Categorias:** no layout, "Categorias" misturava espécie e porte. Na PoC, espécie e porte ficam no **cadastro do pet**
+  e "Categoria" passou a ser o **tipo de veículo** (Pet Padrão, Pet Grande Porte, Pet Felino, Ambulância Pet), escolhido
+  automaticamente conforme o pet.
+- **Extras do layout** ("Você deseja: música ambiente, mantas, petiscos") viraram itens com preço somado ao valor da corrida.
+- **Telas que faltavam no layout** e foram criadas: Meus pets, resumo da corrida, procurando motorista, histórico.
 
-### 1. Pré-requisitos
-- **Node.js 20 ou superior**: https://nodejs.org (verifique com `node -v`)
-- **Um PostgreSQL**. Escolha UMA opção:
-  - **A) Docker** (se tiver o Docker Desktop instalado): `docker compose up -d`
-  - **B) Neon** (online e grátis, sem instalar nada): crie uma conta em https://neon.tech, crie um projeto e copie a "connection string"
-  - **C) PostgreSQL instalado no PC**: crie um banco chamado `transpet`
+---
 
-### 2. Instalar as dependências
+## 2. Preparação do ambiente — stack escolhida
+
+| Camada | Tecnologia | Por que escolhemos |
+|---|---|---|
+| Frontend | HTML, CSS e JavaScript puro (mobile-first), em `frontend/` | Roda em qualquer navegador e celular sem instalação; o layout foi pensado para celular |
+| Backend / API | Node.js 20+, Express 5, TypeScript, Zod, JWT, bcrypt, em `backend/` | Mesma linguagem (JavaScript) do frontend; TypeScript evita erros; Zod valida os dados; JWT e bcrypt dão login seguro |
+| Banco de dados | PostgreSQL 16 (SQL puro com `pg`), em `backend/db/` | Dados relacionais (tutor → pets → corridas → avaliação); SQL visível em `schema.sql` |
+| Hospedagem do banco | Neon (PostgreSQL online gratuito) ou Docker | Sem instalar nada no PC; Docker como alternativa local |
+| Versionamento | Git e GitHub | Histórico e colaboração do grupo |
+
+### Arquitetura
+```
+[ Navegador / celular ]  →  HTTP + JSON  →  [ API Express ]  →  SQL  →  [ PostgreSQL ]
+   frontend/                                  backend/src/               backend/db/
+                                              routes → services → repositories
+```
+- **routes:** recebem a requisição e validam os dados
+- **services:** regras de negócio (preço, categorias compatíveis, simulação da corrida)
+- **repositories:** todo o SQL do banco
+
+### Modelagem de dados
+`usuarios` → `pets` → `corridas` (+ `corrida_extras`) → `avaliacoes`, com `categorias`, `extras` e `motoristas`
+como tabelas de catálogo. Detalhes em [`backend/db/schema.sql`](backend/db/schema.sql).
+
+---
+
+## 3. Estrutura do repositório
+
+```
+TransPet/
+├── backend/    # API REST + banco de dados (README próprio com todas as rotas)
+├── frontend/   # Interface do app (servida pela API em /demo)
+└── docs/       # Mapeamento das jornadas, layout das telas, manual de configuração e vídeo
+```
+
+## 4. Como executar (passo a passo)
+
+**Pré-requisitos:** Node.js 20+ e um PostgreSQL (Neon online, Docker ou instalado no PC).
+
 ```bash
+# 1. Entrar na pasta do backend
+cd backend
+
+# 2. Instalar dependências
 npm install
-```
 
-### 3. Configurar o `.env`
-Copie o `.env.example` para um novo arquivo chamado `.env`.
-- Se usou **Docker**, não precisa mudar nada.
-- Se usou **Neon**, troque o `DATABASE_URL` pela connection string do Neon.
-- Se usou **Postgres local**, ajuste usuário e senha.
+# 3. Criar o .env (Windows: copy .env.example .env) e colocar o endereço do banco em DATABASE_URL
+cp .env.example .env
 
-### 4. Criar as tabelas e os dados iniciais
-```bash
+# 4. Criar as tabelas e os dados iniciais (categorias, extras, motoristas)
 npm run db:setup
-```
-Saída esperada:
-```
-✅ Tabelas criadas
-✅ Dados iniciais inseridos (4 categorias, 3 extras, 3 motoristas)
-```
 
-### 5. Subir a API
-```bash
+# 5. Subir a API + frontend
 npm run dev
 ```
-Saída esperada: `🚀 API TransPet rodando em http://localhost:3333`
 
-### 6. Testar
-Abra no navegador: http://localhost:3333/health
+Sem Neon, dá para subir um PostgreSQL local com Docker (`docker compose up -d`) antes do passo 4.
 
-Resposta esperada:
-```json
-{"status":"ok","banco":"conectado","categorias":4}
+Depois abra no navegador:
+
+- **Aplicativo:** http://localhost:3333/demo/
+- **Teste da API:** http://localhost:3333/health → `{"status":"ok","banco":"conectado","categorias":4}`
+
+O painel preto ao lado do celular mostra as chamadas reais feitas à API.
+
+## 5. Testes e validação
+
+Com a API rodando, em outro terminal, dentro de `backend/`:
+
+```bash
+npm run test:tudo
 ```
 
-✅ Se apareceu isso, a Parte 1 está pronta!
+Resultado: **62 testes automáticos passando**, cobrindo cadastro/login, pets, estimativa de valor,
+corridas (incluindo simulação automática e agendamento), avaliação e histórico. Também testam regras de
+segurança: um tutor não acessa pets nem corridas de outro.
 
-## Parte 2 — Cadastro e login (JA01)
+## 6. Rotas da API
 
-> Se você já tinha a Parte 1 rodando: substitua os arquivos e rode `npm install` de novo.
+Resumo completo em [`backend/README.md`](backend/README.md).
 
-### Rotas
-| Método | Rota | Token? | O que faz |
-|---|---|---|---|
-| POST | `/auth/cadastro` | não | Cria o tutor (e o primeiro pet, opcional) e devolve o token |
-| POST | `/auth/login` | não | Confere e-mail e senha e devolve o token |
-| GET | `/auth/me` | **sim** | Dados do tutor logado + seus pets |
+## 7. Integrantes
 
-O token vai no cabeçalho: `Authorization: Bearer SEU_TOKEN`. Ele vale 7 dias.
-
-### Exemplo — cadastro (tela "Faça seu cadastro")
-```json
-POST /auth/cadastro
-{
-  "nome": "Maria Souza",
-  "email": "maria@email.com",
-  "telefone": "11987654321",
-  "senha": "123456",
-  "pet": { "nome": "Thor", "especie": "CACHORRO", "porte": "MEDIO", "idade": 3 }
-}
-```
-Resposta `201`:
-```json
-{
-  "token": "eyJhbGciOi...",
-  "usuario": { "id": 1, "nome": "Maria Souza", "email": "maria@email.com", "telefone": "11987654321", "criado_em": "..." },
-  "pet": { "id": 1, "nome": "Thor", "especie": "CACHORRO", "porte": "MEDIO", "idade": 3, "...": "..." }
-}
-```
-
-### Valores aceitos (o app deve enviar exatamente assim)
-- `especie`: `CACHORRO`, `GATO`, `SILVESTRE`
-- `porte`: `PEQUENO`, `MEDIO`, `GRANDE`
-- `telefone`: só números com DDD (10 ou 11 dígitos)
-- `senha`: mínimo 6 caracteres
-
-### Respostas de erro
-| Status | Quando |
+| Nome | Etapa escolhida na enquete do grupo |
 |---|---|
-| 400 | Dados inválidos — vem a lista `campos` dizendo o que corrigir |
-| 401 | Login errado, ou token ausente/inválido |
-| 409 | E-mail já cadastrado |
+| Jaqueline Freitas | Escolha de frontend, backend e banco de dados; lógica do servidor, APIs e repositório de dados |
+| Giovanna | Configuração de repositório e servidores de desenvolvimento |
+| Ray | Configuração de repositório e servidores de desenvolvimento |
+| Novaes | Jornadas associadas (mapeamento) |
+| Vitória Mota | Criar interface |
 
-### Testar
-Com a API rodando (`npm run dev`), abra **outro terminal** e rode:
-```bash
-npm run test:parte2
-```
-Esperado: `🎉  9 passaram, 0 falharam`
-
-## Parte 3 — Pets (JA02)
-
-Todas as rotas precisam de token (`Authorization: Bearer SEU_TOKEN`).
-Cada tutor só vê e mexe nos **próprios** pets.
-
-| Método | Rota | O que faz | Tela |
-|---|---|---|---|
-| GET | `/pets` | Lista os pets do tutor (lista vazia se não tiver) | Meus pets |
-| GET | `/pets/:id` | Detalhes de um pet | — |
-| POST | `/pets` | Cadastra um pet novo | Cadastro de pet |
-| PUT | `/pets/:id` | Edita um pet (envia todos os campos) | Cadastro de pet |
-| DELETE | `/pets/:id` | Remove um pet (bloqueado se ele já tiver corridas) | Meus pets |
-
-### Exemplo — cadastrar pet
-```json
-POST /pets
-{ "nome": "Mia", "especie": "GATO", "raca": "Siamês", "porte": "PEQUENO", "idade": 2, "observacoes": "Fica ansiosa em carro" }
-```
-Obrigatórios: `nome`, `especie`, `porte`. Opcionais: `raca`, `idade`, `observacoes`, `fotoUrl`.
-
-### Testar
-Com a API rodando, em outro terminal:
-```bash
-npm run test:parte3
-```
-Esperado: `🎉  14 passaram, 0 falharam`
-
-## Parte 4 — Categorias, extras e estimativa (JA03 / JA04)
-
-| Método | Rota | Token? | O que faz |
-|---|---|---|---|
-| GET | `/categorias` | não | Lista as categorias de transporte |
-| GET | `/extras` | não | Lista os extras (música ambiente, mantas, petiscos) |
-| POST | `/corridas/estimativa` | **sim** | Valor e tempo de cada categoria para o pet escolhido |
-
-### Exemplo — estimativa (tela "Partida / Destino / Categorias / Você deseja")
-```json
-POST /corridas/estimativa
-{ "petId": 1, "origem": "Rua Endereço, 123", "destino": "Clínica Vet, 50", "extras": [1, 3] }
-```
-Resposta (resumida):
-```json
-{
-  "distanciaKm": 19.7,
-  "tempoEstimadoMin": 47,
-  "extras": [{ "id": 1, "nome": "Música ambiente", "preco": 3 }, { "id": 3, "nome": "Petiscos", "preco": 7 }],
-  "categorias": [
-    { "id": 1, "nome": "Pet Padrão", "disponivel": true, "motivo": null, "recomendada": true,
-      "valorCorrida": 64.25, "valorExtras": 10, "valorTotal": 74.25 },
-    { "id": 4, "nome": "Ambulância Pet", "disponivel": false, "motivo": "Em breve — ainda não disponível", "...": "..." }
-  ]
-}
-```
-O campo `valorTotal` é o que aparece em **"Valor da corrida: R$..."** no layout.
-
-### Regras
-- **Distância simulada** (2 a 25 km), sempre igual para a mesma origem/destino. Tempo: ~25 km/h, mínimo 5 min.
-- **Valor** = preço base + preço por km × distância + extras.
-- **Compatibilidade:** Pet Felino só para gatos; Pet Padrão não aceita porte grande; Ambulância Pet é ilustrativa (indisponível).
-- **Recomendada:** gato → Pet Felino; porte grande → Pet Grande Porte; demais → Pet Padrão.
-
-### Testar
-```bash
-npm run test:parte4
-```
-Esperado: `🎉  11 passaram, 0 falharam`
-
-## Parte 5 — Corridas e simulação (JA05 / JA06)
-
-> ⚠️ Esta parte mudou o banco. Depois de atualizar os arquivos, rode **`npm run db:setup`** de novo (apaga os dados de teste e recria as tabelas).
-
-| Método | Rota | O que faz | Tela |
-|---|---|---|---|
-| POST | `/corridas` | Confirma a corrida (status `SOLICITADA`) | Botão "Confirmar" |
-| GET | `/corridas/:id` | Status, motorista, veículo, placa, "chegada em X min" | Procurando motorista / Corrida em andamento |
-| POST | `/corridas/:id/avancar` | Avança uma etapa na hora (para a apresentação) | — |
-| POST | `/corridas/:id/cancelar` | Cancela (só antes de a viagem começar) | Procurando motorista |
-
-### Exemplo — confirmar corrida
-```json
-POST /corridas
-{ "petId": 1, "categoriaId": 1, "origem": "Rua Endereço, 123", "destino": "Clínica Vet, 50", "extras": [2] }
-```
-Para **agendar**, acrescente `"agendadaPara": "2026-11-25T14:30:00-03:00"` (mínimo 5 min no futuro).
-
-### Resposta de `GET /corridas/:id` (resumida)
-```json
-{
-  "id": 1,
-  "status": "A_CAMINHO",
-  "statusTexto": "Motorista a caminho",
-  "etaMinutos": 4,
-  "valor": 69.25,
-  "motorista": { "nome": "Fernanda da Silva", "veiculo": "Jeep Renegade", "placa": "FTR-7B29" },
-  "etapas": [ { "status": "SOLICITADA", "texto": "Procurando motorista...", "concluida": true }, "..." ]
-}
-```
-
-### Como a simulação funciona
-O app consulta `GET /corridas/:id` a cada poucos segundos e o status avança sozinho:
-
-| Status | Texto | Dura |
-|---|---|---|
-| `SOLICITADA` | Procurando motorista... | 10s |
-| `MOTORISTA_CONFIRMADO` | Motorista confirmado | 10s (agendada: até o horário marcado) |
-| `A_CAMINHO` | Motorista a caminho | 20s |
-| `EM_ANDAMENTO` | Viagem em andamento | 30s |
-| `CONCLUIDA` | Viagem concluída! | — |
-
-Ajuste no `.env`: `SIMULACAO_ETAPA_SEGUNDOS` (velocidade) e `SIMULACAO_AUTOMATICA=false` (só avança pela rota `/avancar`).
-
-### Testar
-```bash
-npm run test:parte5
-```
-Esperado (leva ~25s): `🎉  17 passaram, 0 falharam`
-
-## Parte 6 — Avaliação e histórico (JA07 / JA08)
-
-| Método | Rota | O que faz | Tela |
-|---|---|---|---|
-| POST | `/corridas/:id/avaliacao` | Registra estrelas (1 a 5) e comentário opcional | Avalie a motorista |
-| GET | `/corridas` | Lista as corridas do tutor, mais recentes primeiro | Histórico |
-
-### Exemplo — avaliar
-```json
-POST /corridas/1/avaliacao
-{ "estrelas": 5, "comentario": "A Luna chegou tranquila!" }
-```
-
-### Regras
-- Só avalia corrida **concluída**, e só **uma vez**.
-- `GET /corridas/:id` agora traz `podeAvaliar` (true/false) e `avaliacao` — use para decidir se mostra a tela de estrelas.
-- Os dados da motorista trazem `mediaEstrelas` e `totalAvaliacoes`.
-
-### Testar
-```bash
-npm run test:parte6
-```
-Esperado: `🎉  11 passaram, 0 falharam`
-
-## Problemas comuns
-| Erro | Solução |
-|---|---|
-| `ECONNREFUSED` | O banco não está rodando. Suba o Docker ou confira o `DATABASE_URL` |
-| `password authentication failed` | Usuário/senha errados no `.env` |
-| `database "transpet" does not exist` | Crie o banco `transpet` |
-| `EADDRINUSE :3333` | Já tem algo na porta 3333. Mude `PORT` no `.env` |
-
-## Scripts
-| Comando | O que faz |
-|---|---|
-| `npm run dev` | Sobe a API em modo desenvolvimento (reinicia ao salvar) |
-| `npm run db:setup` | Apaga e recria as tabelas com os dados iniciais |
-| `npm run build` | Compila para JavaScript (pasta `dist`) |
-| `npm start` | Roda a versão compilada |
-
-## Próximas partes
-- [x] Parte 1 — Estrutura, banco e servidor
-- [x] Parte 2 — Cadastro e login (JWT)
-- [x] Parte 3 — Pets
-- [x] Parte 4 — Categorias, extras e estimativa de valor
-- [x] Parte 5 — Corridas e simulação de status
-- [x] Parte 6 — Avaliação e histórico
+**Observação:** a etapa "Escolha de frontend, backend e banco de dados" foi realizada somente por Jaqueline Freitas. Os outros dois integrantes inscritos nela não participaram.
