@@ -3,7 +3,7 @@
 **Mais que transporte, cuidado em movimento.**
 
 Protótipo funcional (PoC) de um aplicativo de transporte especializado para pets.
-Projeto Integrador SENAC EAD (TADS/TSI) — **Grupo 41** — 2ª entrega.
+Projeto Integrador SENAC EAD (TADS/TSI) **Grupo 41** 2ª entrega.
 
 ## Jornada da prova de conceito
 
