@@ -28,7 +28,7 @@ valores das corridas, disponibilidade de veículos. O botão **"Avançar etapa (
 TransPet/
 ├── backend/    # API REST + banco de dados (README próprio com todas as rotas)
 ├── frontend/   # Interface do app (servida pela API em /demo)
-└── docs/       # Mapeamento das jornadas e manual de configuração
+└── docs/       # Mapeamento das jornadas, layout das telas, manual de configuração e vídeo
 ```
 
 ## Como executar (passo a passo)
@@ -70,6 +70,8 @@ Com a API rodando, em outro terminal, dentro de `backend/`:
 npm run test:tudo
 ```
 
+Resultado esperado: **62 testes passando** (cadastro/login, pets, estimativa, corridas, avaliação e histórico).
+
 ## Rotas da API
 
 Resumo completo em [`backend/README.md`](backend/README.md).
@@ -78,14 +80,19 @@ Resumo completo em [`backend/README.md`](backend/README.md).
 
 | Nome | Etapa escolhida na enquete do grupo |
 |---|---|
-| Jaqueline Freitas | Escolha de frontend, backend e banco de dados; lógica do servidor, APIs e repositório de dados |
-| Giovanna | Configuração de repositório e servidores de desenvolvimento |
-| Ray | Configuração de repositório e servidores de desenvolvimento |
-| Novaes | Jornadas associadas (mapeamento) |
-| Vitória Mota | Criar interface |
+| Jaqueline Freitas Dos Santos | Escolha de frontend, backend e banco de dados; lógica do servidor, APIs e repositório de dados |
+| Giovanna Bueno Barros | Configuração de repositório e servidores de desenvolvimento |
+| Rayanne Targino Muniz | Configuração de repositório e servidores de desenvolvimento |
+| Wesley Salgueiro Novaes | Jornadas associadas (mapeamento) |
+| Vitoria Cristine Mota | Criar interface |
 
 **Observação:** a etapa "Escolha de frontend, backend e banco de dados" foi realizada somente por Jaqueline Freitas. Os outros dois integrantes inscritos nela não participaram.
 
 ## Vídeo de demonstração
 
-_Colar aqui o link (YouTube não listado) do vídeo de até 1 minuto._
+▶️ **[Assistir ao vídeo (59 s)](docs/video_demonstracao.mp4)** — arquivo `docs/video_demonstracao.mp4`
+(no GitHub, clique no arquivo e depois em **View raw** para reproduzir ou baixar).
+
+O vídeo mostra a jornada completa funcionando: cadastro de pet → solicitação com agendamento e extras →
+categoria recomendada e bloqueadas → resumo e confirmação → motorista confirmado → viagem em andamento →
+viagem concluída e avaliação. À direita, o painel exibe as chamadas reais à API.
